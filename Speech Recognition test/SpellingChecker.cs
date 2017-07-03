@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Accord;
-using Accord.MachineLearning;
-using Accord.MachineLearning.VectorMachines;
-using Accord.Statistics.Kernels;
 
 namespace Speech_Recognition_test
 {

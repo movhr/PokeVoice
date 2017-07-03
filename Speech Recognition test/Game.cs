@@ -190,10 +190,10 @@ namespace Speech_Recognition_test
             text = text.Replace('\n', ' ');
             if (text.Contains("Wild") && text.Contains("appeared"))
                 EnterBattle(OpponentType.Wild);
-            else if (text.Contains("sent out"))
-                EnterBattle(OpponentType.Trainer);
-            else if ((text.Contains("fainted") || text.Contains("Got away safely")) && Opponent == OpponentType.Wild)
+            else if (Opponent == OpponentType.Wild && (text.Contains("fainted") || text.Contains("Got away safely")))
                 ExitBattle();
+            else if (text.Contains("wants to battle"))
+                EnterBattle(OpponentType.Trainer);
             else if (text.Contains("was defeated") && Opponent == OpponentType.Trainer)
                 ExitBattle();
         }
@@ -239,7 +239,10 @@ namespace Speech_Recognition_test
                     }
                     break;
                 case BattleState.Fight:
-                    ChooseMove(text);
+                    if (Form1.cancelation.Contains(text))
+                        CurrentState = BattleState.Battle;
+                    else
+                        ChooseMove(text);
                     return;
                 default:
                     break;

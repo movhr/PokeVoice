@@ -92,8 +92,7 @@ namespace Speech_Recognition_test
             Recognizer.LoadGrammar(grammar);
 
             // Register a handler for the SpeechRecognized event.
-            Recognizer.SpeechRecognized +=
-              new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+            Recognizer.SpeechRecognized += (sre_SpeechRecognized);
 
             FileStream logFile = File.Open(LOG_FILE_PATH, FileMode.Append);
             LogStream = new StreamWriter(logFile);
