@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,26 @@ namespace Speech_Recognition_test
 {
     public static class PictureRecognition
     {
-        public static bool[] EmptyTextBox = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false };
+        public static bool[] EmptyTextBox =
+        {
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+            false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,
+            true, true, true, true, true, true, true, true, true, true, true, true, true, false
+        };
 
         public static List<bool> GetHash(Bitmap bmpSource, out Bitmap bmpMin, Size size)
         {
@@ -55,7 +75,7 @@ namespace Speech_Recognition_test
                 if (l1[i] != l2[i])
                     err++;
             }
-            return err == 0 ? 100 : (n - (float)err) / n * 100;
+            return err == 0 ? 100 : (n - (float) err) / n * 100;
         }
 
         public static float GetHashProbability(Bitmap bmp, bool[] barr)
@@ -68,6 +88,33 @@ namespace Speech_Recognition_test
         {
             return GetHashProbability(GetHash(bmp1), GetHash(bmp2));
         }
-    }
 
+        public static Bitmap ShootScreen(MyRectangle area)
+        {
+            //Create a new bitmap.
+            var rect = new Form1.Rect();
+            if (Form1.VBA == null)
+                throw new NullReferenceException("Could not find window");
+
+            if (!Ocr.GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
+                throw new NullReferenceException("Could not find window location");
+
+            
+            var bmpScreenshot = new Bitmap(area.Width, area.Height, PixelFormat.Format24bppRgb);
+
+            // Create a graphics object from the bitmap.
+            var gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+
+            // Take the screenshot from the upper left corner to the right bottom corner.
+            gfxScreenshot.CopyFromScreen(
+                area.Left,
+                area.Top,
+                0,
+                0,
+                new Size(area.Width, area.Height),
+                CopyPixelOperation.SourceCopy);
+
+            return bmpScreenshot;
+        }
+    }
 }

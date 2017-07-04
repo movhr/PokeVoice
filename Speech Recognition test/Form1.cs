@@ -40,7 +40,7 @@ namespace Speech_Recognition_test
         public static string[] cancelation = new string[] { "exit", "back", "no" };
         public static string[] noActions = new string[] {"cut", "close", "start"};
         public static string[] navigation = new string[] { "left", "right", "up", "down" };
-        public static string[] BattleOptions = { "FIGHT", "PACK", "POKéMON", "RUN" };
+        public static string[] BattleOptions = { "FIGHT", "PACK", "POKéMON", "RUN", "again" };
         public static string[] BattleSpecific = { "enter trainer battle", "enter wild battle", "read moves" };
         public static string[] OVERGAME_MENU = new string[] { "menu" };
         public static string[] ocr = new string[] { "read screen", "picture recognition", "compare textbox" };

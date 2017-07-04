@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Speech.Recognition;
@@ -136,24 +137,24 @@ namespace Speech_Recognition_test
             Trainer
         }
 
+        public static Bitmap ContinueConsole;
         public static OpponentType Opponent;
         public static BattleState CurrentState;
         public static bool InBattle;
         public static bool HasMoves;
+        public static string LastMove;
         public static string[] MoveList;
         public static int MoveIndex = 0;
         private static readonly string[] NewlineDelimiter = { "\n" };
         private static Form1 _form;
         private static Grammar movesGrammar;
         private static Vector MovingDirection;
-        public static Thread t;
 
         public static void SetForm(Form1 form)
         {
             _form = form;
             MovingDirection = new Vector();
-            //t = new Thread(new ThreadStart(Update));
-            //t.Start();
+            ContinueConsole = new Bitmap(File.OpenRead("continueConsole.png"));
         }
 
         public static void SetMoves(string str)
@@ -232,6 +233,11 @@ namespace Speech_Recognition_test
                         ChooseAction("FIGHT");
                         ChooseMove(text);
                     }
+                    else if (text == "again")
+                    {
+                        ChooseAction("FIGHT");
+                        ChooseMove(LastMove);
+                    }
                     else
                     {
                         ChooseAction(text);
@@ -299,6 +305,7 @@ namespace Speech_Recognition_test
                 else
                     BattleMenuCursor.SelectMove(moveIndex);
                 CurrentState = BattleState.Battle;
+                LastMove = move;
             }
 
         }
@@ -335,10 +342,18 @@ namespace Speech_Recognition_test
             _form.gameState.Text = CurrentState.ToString();
         }
 
-        public static void CheckMovingState(Bitmap bmp)
+        private static int timeout = 0;
+
+        public static void CheckTextbox(Bitmap bmp)
         {
             if (PictureRecognition.GetHashProbability(bmp, PictureRecognition.EmptyTextBox) > 99)
+            {
                 MovingDirection = new Vector();
+                if (timeout == 0)
+                {
+                    
+                }
+            }
         }
     }
 }
