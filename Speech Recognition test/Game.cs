@@ -160,15 +160,14 @@ namespace Speech_Recognition_test
         {
             // Update moves
             var lines = str.Split(NewlineDelimiter, StringSplitOptions.RemoveEmptyEntries)
-                .Where((x, i) => i > 0 && !string.IsNullOrWhiteSpace(x))
-                .Select((x, i) => i == 0 ? x.Substring(1) : x)
+                .Where((x, i) => i > 0 && !string.IsNullOrWhiteSpace(x)) //Remove added confidence from OCR and check for whitelines
                 .ToArray();
-
+            
             if (lines.Length > 4)
                 throw new IndexOutOfRangeException("Not a valid amount of moves given.");
 
-            MoveList = lines.ToArray();
-
+            MoveList = lines.Select( (x,i) => x.StartsWith(">") ? x.Substring(1) : x).ToArray();
+            BattleMenuCursor.FightCursor = Array.IndexOf(lines, lines.FirstOrDefault((x) => x.StartsWith(">")));
             _form.listBox1.Items.Clear();
             foreach (string move in MoveList)
                 _form.listBox1.Items.Add(move);
@@ -190,10 +189,10 @@ namespace Speech_Recognition_test
             text = text.Replace('\n', ' ');
             if (text.Contains("Wild") && text.Contains("appeared"))
                 EnterBattle(OpponentType.Wild);
-            else if (Opponent == OpponentType.Wild && (text.Contains("fainted") || text.Contains("Got away safely")))
-                ExitBattle();
             else if (text.Contains("wants to battle"))
                 EnterBattle(OpponentType.Trainer);
+            else if (Opponent == OpponentType.Wild && (text.Contains("fainted") || text.Contains("Got away safely")))
+                ExitBattle();
             else if (text.Contains("was defeated") && Opponent == OpponentType.Trainer)
                 ExitBattle();
         }

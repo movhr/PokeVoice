@@ -23,6 +23,11 @@ namespace Speech_Recognition_test
 
         }
 
+        public static string FixIchar(string str)
+        {
+            return str.Replace(" I ", "I");
+        }
+
         private static char[] ignoredCharacters = {'\n', '!', '?'};
 
         public static string CheckAndReplaceLastChar(string str, char oldChar, char newChar, out bool hasChanged, bool shouldReplaceIfAlone = false)
