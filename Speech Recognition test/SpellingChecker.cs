@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Accord;
-using Accord.MachineLearning;
-using Accord.MachineLearning.VectorMachines;
-using Accord.Statistics.Kernels;
 
 namespace Speech_Recognition_test
 {
@@ -25,6 +21,11 @@ namespace Speech_Recognition_test
             string nospace = input.Replace(" ", "");
             return input;
 
+        }
+
+        public static string FixIchar(string str)
+        {
+            return str.Replace(" I ", "I");
         }
 
         private static char[] ignoredCharacters = {'\n', '!', '?'};
