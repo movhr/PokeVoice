@@ -54,7 +54,8 @@ namespace Speech_Recognition_test
         }
 
         static string LAST_RESULT = "";
-        public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
+        //public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
+        public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt";
         public static StreamWriter LogStream;
         public static Process[] VBA;
         public SpeechRecognizer Recognizer;

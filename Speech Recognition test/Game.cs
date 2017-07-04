@@ -45,7 +45,9 @@ namespace Speech_Recognition_test
         public int X;
         public int Y;
         public Vector()
-            => X = Y = 0;
+        {
+            X = Y = 0;
+        }
 
         public Vector(int x, int y)
         {
