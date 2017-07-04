@@ -54,8 +54,8 @@ namespace Speech_Recognition_test
         }
 
         static string LAST_RESULT = "";
-        //public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
-        public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt";
+        public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
+        //public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt"; 
         public static StreamWriter LogStream;
         public static Process[] VBA;
         public SpeechRecognizer Recognizer;
@@ -93,8 +93,7 @@ namespace Speech_Recognition_test
             Recognizer.LoadGrammar(grammar);
 
             // Register a handler for the SpeechRecognized event.
-            Recognizer.SpeechRecognized +=
-              new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+            Recognizer.SpeechRecognized += (sre_SpeechRecognized);
 
             FileStream logFile = File.Open(LOG_FILE_PATH, FileMode.Append);
             LogStream = new StreamWriter(logFile);
