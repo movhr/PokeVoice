@@ -255,6 +255,7 @@ namespace Speech_Recognition_test
             InBattle = true;
             CurrentState = BattleState.Battle;
             _form.battleModeLabel.Text = "IN BATTLE";
+            Opponent = opponent;
         }
 
         //Step 2: select action (fight, pack, etc)

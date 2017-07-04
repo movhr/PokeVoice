@@ -76,7 +76,7 @@ namespace Speech_Recognition_test
                 Right = consoleLocation.Right - 2 * (windowLocation.Right / 140 * 8)
             };
 
-            ShootingRegion = consoleLocation;
+            ShootingRegion = consoleTextLocation;
             oldRect = rect;
         }
 
