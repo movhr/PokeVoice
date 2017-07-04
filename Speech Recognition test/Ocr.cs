@@ -50,7 +50,7 @@ namespace Speech_Recognition_test
                 Right = rect.Right
             };
 
-        public static MyRectangle RelativeTo(MyRectangle r, int offsTop, int offsLeft, int offsBottom, int offsRight)
+        public static MyRectangle RelativeToRectangle(MyRectangle r, int offsTop, int offsLeft, int offsBottom, int offsRight)
         {
             var mH = (float)r.Height / Ocr.DefaultScreenSize.Height;
             var mW = (float)r.Width / Ocr.DefaultScreenSize.Width;
@@ -62,7 +62,23 @@ namespace Speech_Recognition_test
                 Right = (int)(mW * offsRight + r.Right)
             };
         }
-        
+
+        public static MyRectangle RelativeToSize(MyRectangle r, int offsTop, int offsLeft, int offsWidth, int offsHeight)
+        {
+            var mH = (float)r.Height / Ocr.DefaultScreenSize.Height;
+            var mW = (float)r.Width / Ocr.DefaultScreenSize.Width;
+            var top = (mH * offsTop + r.Top);
+            var left = (mW * offsLeft + r.Left);
+            var newRect = new MyRectangle
+            {
+                Top = (int)(top),
+                Left = (int)(left),
+                Bottom = (int)(mH * offsHeight + top),
+                Right = (int)(mW * offsWidth + left)
+            };
+            return newRect;
+        }
+
         public bool IsEmpty() => Top == 0 && Left == 0 && Right == 0 && Bottom == 0;
     }
 
@@ -93,9 +109,9 @@ namespace Speech_Recognition_test
                 Top = (rect.Bottom - 8) - (height / DefaultScreenSize.Height * DefaultScreenSize.Height)
             };
 
-            consoleLocation = MyRectangle.RelativeTo(windowLocation, DefaultScreenSize.Height / 3 * 2, 0, 0, 0);
+            consoleLocation = MyRectangle.RelativeToRectangle(windowLocation, DefaultScreenSize.Height / 3 * 2, 0, 0, 0);
 
-            consoleTextLocation = MyRectangle.RelativeTo(consoleLocation, 25, 5, -22, -6);
+            consoleTextLocation = MyRectangle.RelativeToRectangle(consoleLocation, 25, 5, -22, -6);
 
             //consoleLocation = new MyRectangle
             //{
@@ -159,7 +175,6 @@ namespace Speech_Recognition_test
             }
             var sw = Stopwatch.StartNew();
             var bm = ShootScreen();
-            Game.CheckTextbox(bm);
             using (var result = engine.Process(bm))
             {
                 var textResult = result.GetText();

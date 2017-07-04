@@ -151,12 +151,15 @@ namespace Speech_Recognition_test
         private static Form1 _form;
         private static Grammar movesGrammar;
         private static Vector MovingDirection;
+        public static Thread t;
 
         public static void SetForm(Form1 form)
         {
             _form = form;
             MovingDirection = new Vector();
             ContinueConsole = new Bitmap(File.OpenRead("continueConsole.png"));
+            t = new Thread(CheckTextbox);
+            t.Start();
         }
 
         public static void SetMoves(string str)
@@ -343,18 +346,44 @@ namespace Speech_Recognition_test
 
             _form.gameState.Text = CurrentState.ToString();
         }
+        
 
-        private static int timeout = 0;
-
-        public static void CheckTextbox(Bitmap bmp)
+        // Must run continuously
+        public static void CheckTextbox()
         {
-            if (PictureRecognition.GetHashProbability(bmp, PictureRecognition.EmptyTextBox) > 99)
+            try
             {
-                MovingDirection = new Vector();
-                if (timeout == 0)
+                while (true)
                 {
-                    
+                    _awaitOcrLocations:
+                    Thread.Sleep(100);
+                    if (Ocr.consoleLocation.IsEmpty())
+                        goto _awaitOcrLocations;
+                    using (var bmp = PictureRecognition.ShootScreen(Ocr.consoleLocation))
+                    {
+                        var ph = PictureRecognition.GetHashProbability(bmp, PictureRecognition.EmptyTextBox);
+                        if (ph > 75)
+                        {
+                            MovingDirection = new Vector();
+                                using (var ss = PictureRecognition.ShootScreen(
+                                    MyRectangle.RelativeToSize(Ocr.windowLocation, 136, 144, 7, 7)))
+                                {
+                                    //_form.continuePicture.Image = ss;
+                                    ph = PictureRecognition.GetHashProbability(ss, ContinueConsole);
+                                    //_form.continueProbability.Text = ph.ToString("N2");
+                                    if (ph > 70)
+                                    {
+                                        Thread.Sleep(500);
+                                        KeySender.Confirm();
+                                    };
+                                }
+                            }
+                        
+                    }
                 }
+            }
+            catch (ThreadAbortException)
+            {
             }
         }
     }

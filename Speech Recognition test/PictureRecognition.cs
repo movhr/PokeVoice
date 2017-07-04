@@ -86,7 +86,7 @@ namespace Speech_Recognition_test
 
         public static float GetHashProbability(Bitmap bmp1, Bitmap bmp2)
         {
-            return GetHashProbability(GetHash(bmp1), GetHash(bmp2));
+            return GetHashProbability(GetHash(bmp1, 7), GetHash(bmp2, 7));
         }
 
         public static Bitmap ShootScreen(MyRectangle area)
