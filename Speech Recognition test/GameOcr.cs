@@ -10,7 +10,7 @@ namespace Speech_Recognition_test
 {
     public partial class Game
     {
-        public static readonly BitArray EmptyTextBox = new BitArray(new []
+        public static readonly bool[] EmptyTextBox = 
         {
             false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
             false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false,
@@ -29,7 +29,7 @@ namespace Speech_Recognition_test
             false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
             false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,
             true, true, true, true, true, true, true, true, true, true, true, true, true, false
-        });
+        };
 
         public void RelayOcr(string text)
         {

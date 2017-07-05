@@ -112,8 +112,8 @@ namespace Speech_Recognition_test
             {
                 var sw = Stopwatch.StartNew();
                 var ssHash = PictureRecognition.GetHash(Speech_Recognition_test.Ocr.ShootScreen());
-                PrependRichTextboxText(ssHash.Count);
-                for (int i = 0; i < ssHash.Count; i++)
+                PrependRichTextboxText(ssHash.Length);
+                for (int i = 0; i < ssHash.Length; i++)
                 {
                     if (i % 16 == 0)
                         PrependRichTextboxText('\n');
