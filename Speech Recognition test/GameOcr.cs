@@ -10,7 +10,7 @@ namespace Speech_Recognition_test
 {
     public partial class Game
     {
-        public static readonly bool[] EmptyTextBox = new bool []
+        public static readonly bool[] EmptyTextBox = 
         {
             false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
             false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false,
