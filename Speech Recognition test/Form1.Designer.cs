@@ -39,7 +39,10 @@
             this.gameState = new System.Windows.Forms.Label();
             this.moveDirY = new System.Windows.Forms.Label();
             this.moveDirX = new System.Windows.Forms.Label();
+            this.continuePicture = new System.Windows.Forms.PictureBox();
+            this.continueProbability = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.continuePicture)).BeginInit();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -53,10 +56,10 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(447, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(328, 134);
+            this.pictureBox1.Size = new System.Drawing.Size(321, 292);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -65,7 +68,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // battleModeLabel
             // 
@@ -126,11 +129,30 @@
             this.moveDirX.Text = "label1";
             this.moveDirX.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // continuePicture
+            // 
+            this.continuePicture.Location = new System.Drawing.Point(409, 257);
+            this.continuePicture.Name = "continuePicture";
+            this.continuePicture.Size = new System.Drawing.Size(32, 35);
+            this.continuePicture.TabIndex = 8;
+            this.continuePicture.TabStop = false;
+            // 
+            // continueProbability
+            // 
+            this.continueProbability.AutoSize = true;
+            this.continueProbability.Location = new System.Drawing.Point(409, 238);
+            this.continueProbability.Name = "continueProbability";
+            this.continueProbability.Size = new System.Drawing.Size(35, 13);
+            this.continueProbability.TabIndex = 9;
+            this.continueProbability.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 320);
+            this.Controls.Add(this.continueProbability);
+            this.Controls.Add(this.continuePicture);
             this.Controls.Add(this.moveDirX);
             this.Controls.Add(this.moveDirY);
             this.Controls.Add(this.gameState);
@@ -144,6 +166,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.continuePicture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,6 +182,8 @@
         public System.Windows.Forms.Label gameState;
         public System.Windows.Forms.Label moveDirY;
         public System.Windows.Forms.Label moveDirX;
+        public System.Windows.Forms.PictureBox continuePicture;
+        public System.Windows.Forms.Label continueProbability;
     }
 }
 

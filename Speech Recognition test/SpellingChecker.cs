@@ -13,7 +13,7 @@ namespace Speech_Recognition_test
             // Common mistakes
             // u sea -> used
             // u sed -> used
-            // F I GH T -> FIGHT
+            // F I GH UpdateThread -> FIGHT
             // [*]a -> [*]d  (e.g.)
             // >  ana -> and
             // > shoula -> should
@@ -70,9 +70,9 @@ namespace Speech_Recognition_test
             var strList = splStr.Select(x => x.Split('\n'));
             splStr = strList.SelectMany( x => x).ToArray();
 
-            bool b;
             for (int i = 0; i < splStr.Length; i++)
             {
+                bool b;
                 splStr[i] = CheckAndReplaceLastChar(splStr[i], 'S', '!', out b, true);
                 if (!b)
                     splStr[i] = CheckAndReplaceLastChar(splStr[i], '9', '!', out b, true);
