@@ -166,12 +166,12 @@ namespace Speech_Recognition_test
             return bmpScreenshot;
         }
 
-        public static string ReadFromScreen(ref PictureBox pb)
+        public static string ReadFromScreen(ref PictureBox pb, Game game)
         {
             if (engine == null)
             {
                 engine = new TesseractEngine(@"./tessdata", "Pokemon", EngineMode.Default);
-                engine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789é$>…'");
+                engine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789é$>…'!?:.,/");
             }
             var sw = Stopwatch.StartNew();
             var bm = ShootScreen();
@@ -180,7 +180,7 @@ namespace Speech_Recognition_test
                 var textResult = result.GetText();
                 pb.Image = bm;
                 textResult = SpellingChecker.FixIchar(textResult);
-                Game.RelayOcr(textResult);
+                game.RelayOcr(textResult);
                 sw.Stop();
                 return $"Confidence: {result.GetMeanConfidence()} | Speed: {sw.ElapsedMilliseconds}ms\n{textResult}\n";
             }

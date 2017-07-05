@@ -11,58 +11,39 @@ namespace Speech_Recognition_test
 {
     public static class PictureRecognition
     {
-        public static bool[] EmptyTextBox =
+        public static BitArray GetHash(Bitmap bmpSource, out Bitmap bmpResized, Size size)
         {
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, true,
-            true, true, true, true, true, true, true, true, true, true, true, true, true, false
-        };
-
-        public static List<bool> GetHash(Bitmap bmpSource, out Bitmap bmpMin, Size size)
-        {
-            List<bool> lResult = new List<bool>(256);
+            BitArray lResult = new BitArray(size.Width * size.Height);
             //create new image with 16x16 pixel
-            bmpMin = new Bitmap(bmpSource, size);
-            for (int j = 0; j < bmpMin.Width; j++)
+            bmpResized = new Bitmap(bmpSource, size);
+            int k = 0;
+            for (int j = 0; j < bmpResized.Width; j++)
             {
-                for (int i = 0; i < bmpMin.Height; i++)
+                for (int i = 0; i < bmpResized.Height; i++)
                 {
                     //reduce colors to true / false
-                    lResult.Add(bmpMin.GetPixel(j, i).GetBrightness() < 0.5f);
+                    lResult[k] = bmpResized.GetPixel(j, i).GetBrightness() < 0.5f;
+                    k++;
                 }
             }
             return lResult;
         }
 
-        public static List<bool> GetHash(Bitmap bmpSource, Size size)
+        public static BitArray GetHash(Bitmap bmpSource, Size size)
         {
             var result = GetHash(bmpSource, out Bitmap bm, size);
             bm.Dispose();
             return result;
         }
 
-        public static List<bool> GetHash(Bitmap bmpSource, int size = 16)
+        public static BitArray GetHash(Bitmap bmpSource, int size = 16)
         {
             var result = GetHash(bmpSource, out Bitmap bm, new Size(size, size));
             bm.Dispose();
             return result;
         }
 
-        public static float GetHashProbability(IList<bool> l1, IList<bool> l2)
+        public static float GetHashProbability(BitArray l1, BitArray l2)
         {
             if (l1.Count != l2.Count)
                 throw new ArgumentException("Pictures are not the same size");
@@ -78,7 +59,7 @@ namespace Speech_Recognition_test
             return err == 0 ? 100 : (n - (float) err) / n * 100;
         }
 
-        public static float GetHashProbability(Bitmap bmp, bool[] barr)
+        public static float GetHashProbability(Bitmap bmp, BitArray barr)
         {
             var hash = GetHash(bmp);
             return GetHashProbability(hash, barr);
