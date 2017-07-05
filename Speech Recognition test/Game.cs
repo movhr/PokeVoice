@@ -186,7 +186,7 @@ namespace Speech_Recognition_test
                         KeySender.Down();
 
                     // Await window locations to perform checks on textbox if there is any
-                    if (Ocr.consoleLocation.IsEmpty())
+                    if (Ocr.ConsoleLocation.IsEmpty())
                         goto _start;
 
                     // Checks whether there is a textbox and if talk can continue

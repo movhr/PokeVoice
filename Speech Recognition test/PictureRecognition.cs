@@ -11,9 +11,9 @@ namespace Speech_Recognition_test
 {
     public static class PictureRecognition
     {
-        public static BitArray GetHash(Bitmap bmpSource, out Bitmap bmpResized, Size size)
+        public static bool[] GetHash(Bitmap bmpSource, out Bitmap bmpResized, Size size)
         {
-            BitArray lResult = new BitArray(size.Width * size.Height);
+            bool[] lResult = new bool[size.Width * size.Height];
             //create new image with 16x16 pixel
             bmpResized = new Bitmap(bmpSource, size);
             int k = 0;
@@ -29,29 +29,29 @@ namespace Speech_Recognition_test
             return lResult;
         }
 
-        public static BitArray GetHash(Bitmap bmpSource, Size size)
+        public static bool[] GetHash(Bitmap bmpSource, Size size)
         {
             var result = GetHash(bmpSource, out Bitmap bm, size);
             bm.Dispose();
             return result;
         }
 
-        public static BitArray GetHash(Bitmap bmpSource, int size = 16)
+        public static bool[] GetHash(Bitmap bmpSource, int size = 16)
         {
             var result = GetHash(bmpSource, out Bitmap bm, new Size(size, size));
             bm.Dispose();
             return result;
         }
 
-        public static float GetHashProbability(BitArray l1, BitArray l2)
+        public static float GetHashProbability(bool[] l1, bool[] l2)
         {
-            if (l1.Count != l2.Count)
+            if (l1.Length != l2.Length)
                 throw new ArgumentException("Pictures are not the same size");
 
             int err = 0;
-            int n = l1.Count;
+            int n = l1.Length;
 
-            for (int i = 0; i < l1.Count; i++)
+            for (int i = 0; i < l1.Length; i++)
             {
                 if (l1[i] != l2[i])
                     err++;
@@ -59,7 +59,7 @@ namespace Speech_Recognition_test
             return err == 0 ? 100 : (n - (float) err) / n * 100;
         }
 
-        public static float GetHashProbability(Bitmap bmp, BitArray barr)
+        public static float GetHashProbability(Bitmap bmp, bool[] barr)
         {
             var hash = GetHash(bmp);
             return GetHashProbability(hash, barr);
@@ -73,13 +73,12 @@ namespace Speech_Recognition_test
         public static Bitmap ShootScreen(MyRectangle area)
         {
             //Create a new bitmap.
-            var rect = new Form1.Rect();
-            if (Form1.VBA == null)
+            var rect = new WindowRect();
+            if (Form1.VBA.Length==0)
                 throw new NullReferenceException("Could not find window");
 
             if (!Ocr.GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
                 throw new NullReferenceException("Could not find window location");
-
             
             var bmpScreenshot = new Bitmap(area.Width, area.Height, PixelFormat.Format24bppRgb);
 

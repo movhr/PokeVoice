@@ -46,14 +46,14 @@ namespace Speech_Recognition_test
 
         public void TextboxContinueTalking()
         {
-            using (var bmp = PictureRecognition.ShootScreen(Ocr.consoleLocation))
+            using (var bmp = PictureRecognition.ShootScreen(Ocr.ConsoleLocation))
             {
                 var ph = PictureRecognition.GetHashProbability(bmp, EmptyTextBox);
                 if (ph > 75)
                 {
                     _movingDirection = new Vector();
                     using (var ss = PictureRecognition.ShootScreen(
-                        MyRectangle.RelativeToSize(Ocr.windowLocation, 136, 144, 7, 7)))
+                        MyRectangle.RelativeToSize(Ocr.WindowLocation, 136, 144, 7, 7)))
                     {
                         //_form.continuePicture.Image = ss;
                         ph = PictureRecognition.GetHashProbability(ss, ContinueConsole);

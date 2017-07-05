@@ -15,13 +15,18 @@ using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace Speech_Recognition_test
 {
+    public struct WindowRect
+    {
+        public int Left { get; set; }
+        public int Top { get; set; }
+        public int Right { get; set; }
+        public int Bottom { get; set; }
+    }
 
     public struct MyRectangle
     {
 
-        public int Top, Left;
-        public int Right;
-        public int Bottom;
+        public int Top, Left, Right, Bottom;
         public int Width => Right - Left;
         public int Height => Bottom - Top;
 
@@ -41,13 +46,13 @@ namespace Speech_Recognition_test
             Bottom = Bottom / d
         };
 
-        public static MyRectangle FromRect(Form1.Rect rect)
+        public static MyRectangle FromRect(WindowRect windowRect)
             => new MyRectangle
             {
-                Top = rect.Top,
-                Left = rect.Left,
-                Bottom = rect.Bottom,
-                Right = rect.Right
+                Top = windowRect.Top,
+                Left = windowRect.Left,
+                Bottom = windowRect.Bottom,
+                Right = windowRect.Right
             };
 
         public static MyRectangle RelativeToRectangle(MyRectangle r, int offsTop, int offsLeft, int offsBottom, int offsRight)
@@ -85,65 +90,48 @@ namespace Speech_Recognition_test
     public static class Ocr
     {
         [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, ref Form1.Rect rectangle);
+        public static extern bool GetWindowRect(IntPtr hwnd, ref WindowRect rectangle);
 
         public static Size DefaultScreenSize = new Size(160, 144);
-        public static readonly Form1.Rect emptyRect = new Form1.Rect();
-        public static Form1.Rect oldRect;
-        public static MyRectangle windowLocation;
-        public static MyRectangle consoleTextLocation;
-        public static MyRectangle consoleLocation;
+        public static readonly WindowRect EmptyWindowRect = new WindowRect();
+        public static WindowRect OldWindowRect;
+        public static MyRectangle WindowLocation;
+        public static MyRectangle ConsoleTextLocation;
+        public static MyRectangle ConsoleLocation;
         public static MyRectangle ShootingRegion;
 
-        private static TesseractEngine engine;
+        private static TesseractEngine _engine;
 
-        public static void SetWindowLocations(Form1.Rect rect)
+        public static void SetWindowLocations(WindowRect windowWindowRect)
         {
-            var height = rect.Bottom - rect.Top;
+            var height = windowWindowRect.Bottom - windowWindowRect.Top;
 
-            windowLocation = new MyRectangle
+            WindowLocation = new MyRectangle
             {
-                Left = rect.Left + 8,
-                Right = rect.Right - 8,
-                Bottom = rect.Bottom - 8,
-                Top = (rect.Bottom - 8) - (height / DefaultScreenSize.Height * DefaultScreenSize.Height)
+                Left = windowWindowRect.Left + 8,
+                Right = windowWindowRect.Right - 8,
+                Bottom = windowWindowRect.Bottom - 8,
+                Top = (windowWindowRect.Bottom - 8) - (height / DefaultScreenSize.Height * DefaultScreenSize.Height)
             };
 
-            consoleLocation = MyRectangle.RelativeToRectangle(windowLocation, DefaultScreenSize.Height / 3 * 2, 0, 0, 0);
-
-            consoleTextLocation = MyRectangle.RelativeToRectangle(consoleLocation, 25, 5, -22, -6);
-
-            //consoleLocation = new MyRectangle
-            //{
-            //    Top = windowLocation.Top + windowLocation.Bottom / 3 * 2,
-            //    Left = rect.Left + ,
-            //    Bottom = windowLocation.Bottom / 3,
-            //    Right = windowLocation.Right
-            //};
-
-            //consoleTextLocation = new MyRectangle
-            //{
-            //    Top = consoleLocation.Top + windowLocation.Bottom / 144 * 6,
-            //    Left = consoleLocation.Left + windowLocation.Right / 140 * 6,
-            //    Bottom = consoleLocation.Bottom - 2 * (windowLocation.Bottom / 140 * 7),
-            //    Right = consoleLocation.Right - 2 * (windowLocation.Right / 140 * 8)
-            //};
-
-            ShootingRegion = consoleTextLocation;
-            oldRect = rect;
+            ConsoleLocation = MyRectangle.RelativeToRectangle(WindowLocation, DefaultScreenSize.Height / 3 * 2, 0, 0, 0);
+            ConsoleTextLocation = MyRectangle.RelativeToRectangle(ConsoleLocation, 25, 5, -22, -6);
+            
+            ShootingRegion = ConsoleTextLocation;
+            OldWindowRect = windowWindowRect;
         }
 
         public static Bitmap ShootScreen()
         {
             //Create a new bitmap.
-            var rect = new Form1.Rect();
+            var rect = new WindowRect();
             if (Form1.VBA == null)
                 throw new NullReferenceException("Could not find window");
 
             if (!GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
                 throw new NullReferenceException("Could not find window location");
 
-            if (ShootingRegion.IsEmpty() || !oldRect.Equals(rect))
+            if (ShootingRegion.IsEmpty() || !OldWindowRect.Equals(rect))
                 SetWindowLocations(rect);
 
 
@@ -168,14 +156,15 @@ namespace Speech_Recognition_test
 
         public static string ReadFromScreen(ref PictureBox pb, Game game)
         {
-            if (engine == null)
+            if (_engine == null)
             {
-                engine = new TesseractEngine(@"./tessdata", "Pokemon", EngineMode.Default);
-                engine.SetVariable("tessedit_char_whitelist", @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789é$>…'!?:.,/");
+                _engine = new TesseractEngine(@"./tessdata", "Pokemon", EngineMode.Default);
+                _engine.SetVariable("tessedit_char_whitelist",
+                    @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789é$>…'!?:.,/");
             }
             var sw = Stopwatch.StartNew();
             var bm = ShootScreen();
-            using (var result = engine.Process(bm))
+            using (var result = _engine.Process(bm))
             {
                 var textResult = result.GetText();
                 pb.Image = bm;
@@ -184,7 +173,6 @@ namespace Speech_Recognition_test
                 sw.Stop();
                 return $"Confidence: {result.GetMeanConfidence()} | Speed: {sw.ElapsedMilliseconds}ms\n{textResult}\n";
             }
-
         }
     }
 }
