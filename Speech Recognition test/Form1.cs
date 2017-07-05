@@ -32,8 +32,8 @@ namespace Speech_Recognition_test
         }
 
         static string LAST_RESULT = "";
-        public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
-        //public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt"; 
+        //public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
+        public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt"; 
         public static StreamWriter LogStream;
         public static Process[] VBA;
         public SpeechRecognizer Recognizer;
@@ -112,8 +112,8 @@ namespace Speech_Recognition_test
             {
                 var sw = Stopwatch.StartNew();
                 var ssHash = PictureRecognition.GetHash(Speech_Recognition_test.Ocr.ShootScreen());
-                PrependRichTextboxText(ssHash.Count);
-                for (int i = 0; i < ssHash.Count; i++)
+                PrependRichTextboxText(ssHash.Length);
+                for (int i = 0; i < ssHash.Length; i++)
                 {
                     if (i % 16 == 0)
                         PrependRichTextboxText('\n');

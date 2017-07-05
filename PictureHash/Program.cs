@@ -20,7 +20,7 @@ namespace PictureHash
             var sw = Stopwatch.StartNew();
             var ph = PictureRecognition.GetHash(fbm, out Bitmap rbm, new Size(resizeWidth, resizeHeight));
             sw.Stop();
-            for (var i = 0; i < ph.Count; i++)
+            for (var i = 0; i < ph.Length; i++)
             {
                 if (i % resizeWidth == 0)
                     Console.Write('\n');
@@ -66,12 +66,12 @@ namespace PictureHash
             var sw = Stopwatch.StartNew();
             var ph1 = PictureRecognition.GetHash(fbm1, new Size(resizeWidth, resizeHeight));
             var ph2 = PictureRecognition.GetHash(fbm2, new Size(resizeWidth, resizeHeight));
-            var c = new bool[ph1.Count];
-            for (int i = 0; i < ph1.Count; i++)
+            var c = new bool[ph1.Length];
+            for (int i = 0; i < ph1.Length; i++)
                 c[i] = ph1[i] & ph2[i];
             sw.Stop();
 
-            for (int i = 0; i < ph1.Count; i++)
+            for (int i = 0; i < ph1.Length; i++)
             {
                 if (i % resizeWidth == 0)
                     Console.Write('\n');
