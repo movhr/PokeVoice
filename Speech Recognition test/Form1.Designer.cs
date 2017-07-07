@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -37,10 +36,14 @@
             this.statusLabel = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.gameState = new System.Windows.Forms.Label();
-            this.moveDirY = new System.Windows.Forms.Label();
-            this.moveDirX = new System.Windows.Forms.Label();
             this.continuePicture = new System.Windows.Forms.PictureBox();
             this.continueProbability = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.moveDirX = new System.Windows.Forms.Label();
+            this.moveDirY = new System.Windows.Forms.Label();
+            this.Pokemons = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.continuePicture)).BeginInit();
             this.SuspendLayout();
@@ -56,7 +59,6 @@
             // 
             // pictureBox1
             // 
-            //this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(447, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(321, 292);
@@ -107,28 +109,6 @@
             this.gameState.Text = "label1";
             this.gameState.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // moveDirY
-            // 
-            this.moveDirY.AutoSize = true;
-            this.moveDirY.Location = new System.Drawing.Point(406, 53);
-            this.moveDirY.Name = "moveDirY";
-            this.moveDirY.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.moveDirY.Size = new System.Drawing.Size(35, 13);
-            this.moveDirY.TabIndex = 6;
-            this.moveDirY.Text = "label1";
-            this.moveDirY.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // moveDirX
-            // 
-            this.moveDirX.AutoSize = true;
-            this.moveDirX.Location = new System.Drawing.Point(365, 53);
-            this.moveDirX.Name = "moveDirX";
-            this.moveDirX.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.moveDirX.Size = new System.Drawing.Size(35, 13);
-            this.moveDirX.TabIndex = 7;
-            this.moveDirX.Text = "label1";
-            this.moveDirX.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // continuePicture
             // 
             this.continuePicture.Location = new System.Drawing.Point(409, 257);
@@ -146,15 +126,76 @@
             this.continueProbability.TabIndex = 9;
             this.continueProbability.Text = "label1";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(294, 59);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "move list";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(294, 141);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(66, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "pokemon list";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(297, 238);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(86, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "walking direction";
+            // 
+            // moveDirX
+            // 
+            this.moveDirX.AutoSize = true;
+            this.moveDirX.Location = new System.Drawing.Point(297, 251);
+            this.moveDirX.Name = "moveDirX";
+            this.moveDirX.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.moveDirX.Size = new System.Drawing.Size(35, 13);
+            this.moveDirX.TabIndex = 14;
+            this.moveDirX.Text = "label1";
+            this.moveDirX.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // moveDirY
+            // 
+            this.moveDirY.AutoSize = true;
+            this.moveDirY.Location = new System.Drawing.Point(297, 264);
+            this.moveDirY.Name = "moveDirY";
+            this.moveDirY.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.moveDirY.Size = new System.Drawing.Size(35, 13);
+            this.moveDirY.TabIndex = 13;
+            this.moveDirY.Text = "label1";
+            this.moveDirY.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // Pokemons
+            // 
+            this.Pokemons.FormattingEnabled = true;
+            this.Pokemons.Location = new System.Drawing.Point(294, 157);
+            this.Pokemons.Name = "Pokemons";
+            this.Pokemons.Size = new System.Drawing.Size(147, 82);
+            this.Pokemons.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(775, 320);
-            this.Controls.Add(this.continueProbability);
-            this.Controls.Add(this.continuePicture);
+            this.Controls.Add(this.Pokemons);
             this.Controls.Add(this.moveDirX);
             this.Controls.Add(this.moveDirY);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.continueProbability);
+            this.Controls.Add(this.continuePicture);
             this.Controls.Add(this.gameState);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.statusLabel);
@@ -180,10 +221,14 @@
         public System.Windows.Forms.Label statusLabel;
         public System.Windows.Forms.ListBox listBox1;
         public System.Windows.Forms.Label gameState;
-        public System.Windows.Forms.Label moveDirY;
-        public System.Windows.Forms.Label moveDirX;
         public System.Windows.Forms.PictureBox continuePicture;
         public System.Windows.Forms.Label continueProbability;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        public System.Windows.Forms.Label moveDirX;
+        public System.Windows.Forms.Label moveDirY;
+        public System.Windows.Forms.ListBox Pokemons;
     }
 }
 

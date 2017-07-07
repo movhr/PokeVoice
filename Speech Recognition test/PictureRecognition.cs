@@ -79,7 +79,10 @@ namespace Speech_Recognition_test
 
             if (!Ocr.GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
                 throw new NullReferenceException("Could not find window location");
-            
+
+            if (!Ocr.OldWindowRect.Equals(rect))
+                Ocr.SetWindowLocations(rect);
+
             var bmpScreenshot = new Bitmap(area.Width, area.Height, PixelFormat.Format24bppRgb);
 
             // Create a graphics object from the bitmap.

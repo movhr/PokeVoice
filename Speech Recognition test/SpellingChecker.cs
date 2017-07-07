@@ -8,7 +8,7 @@ namespace Speech_Recognition_test
 {
     public static class SpellingChecker
     {
-        public static string Fix(string input)
+        public static string Fix(this string input)
         {
             // Common mistakes
             // u sea -> used
@@ -23,14 +23,13 @@ namespace Speech_Recognition_test
 
         }
 
-        public static string FixIchar(string str)
-        {
-            return str.Replace(" I ", "I");
-        }
+        public static string FixIchar(this string str) => str.Replace(" I ", "I");
 
-        private static char[] ignoredCharacters = {'\n', '!', '?'};
+        public static string FixPchar(this string str) => str.Replace("F'", "P");
 
-        public static string CheckAndReplaceLastChar(string str, char oldChar, char newChar, out bool hasChanged, bool shouldReplaceIfAlone = false)
+        private static readonly char[] IgnoredCharacters = {'\n', '!', '?'};
+
+        public static string CheckAndReplaceLastChar(this string str, char oldChar, char newChar, out bool hasChanged, bool shouldReplaceIfAlone = false)
         {
             if (str.Length == 0 || (str.Length == 1 && !shouldReplaceIfAlone))
             {
@@ -39,7 +38,7 @@ namespace Speech_Recognition_test
             }
 
             int lastCharPtr = str.Length - 1;
-            while (ignoredCharacters.Contains(str[lastCharPtr]))
+            while (IgnoredCharacters.Contains(str[lastCharPtr]))
             {
                 lastCharPtr--;
 
@@ -64,7 +63,7 @@ namespace Speech_Recognition_test
             return str;
         }
 
-        public static string Check(string str)
+        public static string Check(this string str)
         {
             var splStr = str.Split(' ');
             var strList = splStr.Select(x => x.Split('\n'));

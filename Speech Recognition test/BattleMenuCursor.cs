@@ -3,6 +3,8 @@ namespace Speech_Recognition_test
     public static class BattleMenuCursor
     {
         public static int FightCursor;
+        public static int PokemonCursor;
+        public static int OptionsCursor;
         public static Vector BattleCursor = new Vector();
         public static Vector Fight = new Vector(0, 0);
         public static Vector Pack = new Vector(0, 1);
@@ -13,6 +15,8 @@ namespace Speech_Recognition_test
         {
             BattleCursor = new Vector();
             FightCursor = 0;
+            PokemonCursor = 0;
+            OptionsCursor = 0;
         }
 
         public static void SelectAction(Vector dest)
@@ -28,29 +32,32 @@ namespace Speech_Recognition_test
             else if (dY < 0)
                 KeySender.Up();
             KeySender.Confirm();
-            BattleCursor = dest;
+            BattleCursor.X = dest.X;
+            BattleCursor.Y = dest.Y;
         }
 
-        public static void SelectMove(int moveIndex, int nMaxMoves = 4)
+        public static void SelectIndex(ref int cursor, int itemIndex, int nMaxItems = 4, bool resetCursor = false)
         {
-            int d = moveIndex - FightCursor;
+            int d = itemIndex - cursor;
             if (d > 0)
             {
-                while (FightCursor < moveIndex)
+                while (cursor < itemIndex)
                 {
                     KeySender.Down();
-                    FightCursor++;
+                    cursor++;
                 }
             }
             else if (d < 0)
             {
-                while (FightCursor > moveIndex)
+                while (cursor > itemIndex)
                 {
                     KeySender.Up();
-                    FightCursor--;
+                    cursor--;
                 }
             }
             KeySender.Confirm();
+            if (resetCursor)
+                cursor = 0;
         }
     }
 }
