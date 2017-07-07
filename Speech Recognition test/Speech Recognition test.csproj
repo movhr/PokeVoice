@@ -67,7 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleMenuCursor.cs" />
+    <Compile Include="BattleOption.cs" />
+    <Compile Include="BattleState.cs" />
     <Compile Include="DateTimeExtension.cs" />
+    <Compile Include="EventChain.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

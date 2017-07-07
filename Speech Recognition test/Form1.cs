@@ -59,7 +59,6 @@ namespace Speech_Recognition_test
             x.Add(Ocr);
             x.Add(Navigation);
             x.Add(Extras.ToArray());
-            x.Add(Game.BattleOptions);
             x.Add(Game.BattleSpecific);
             x.Add(NoActions);
             x.Add(Game.Moving);
@@ -104,6 +103,10 @@ namespace Speech_Recognition_test
             PrependRichTextboxText(e.Result.Text + '\n');
 
             LAST_RESULT = e.Result.Text;
+            // First and foremost, check with the game state
+            if (_game.RelayVoiceText(LAST_RESULT))
+                return;
+
             if (Confirmation.Contains(LAST_RESULT))
                 KeySender.Confirm();
 
@@ -125,9 +128,7 @@ namespace Speech_Recognition_test
                 PrependRichTextboxText(sw.ElapsedMilliseconds + "ms \n");
                 PrependRichTextboxText(PictureRecognition.GetHashProbability(ssHash, Game.EmptyTextBox).ToString("N4") + '\n');
             }
-
-            _game.RelayVoiceText(LAST_RESULT);
-
+            
             if (Navigation.Contains(LAST_RESULT))
             {
                     switch (LAST_RESULT)

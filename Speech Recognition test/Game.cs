@@ -14,6 +14,9 @@ namespace Speech_Recognition_test
         private Game(Form1 form)
         {
             _form = form;
+            CurrentEventChain = new System.Collections.Generic.LinkedList<EventLink>();
+            PreviousEventChain = new System.Collections.Generic.LinkedList<EventLink>();
+
             _movingDirection = new Vector();
             CurrentState = BattleState.NotInBattle;
             ContinueConsole = new Bitmap(File.OpenRead("continueConsole.png"));

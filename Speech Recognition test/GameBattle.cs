@@ -10,6 +10,9 @@ namespace Speech_Recognition_test
 {
     public partial class Game
     {
+        public LinkedList<EventLink> PreviousEventChain;
+        public LinkedList<EventLink> CurrentEventChain;
+
         public bool InBattle;
         public bool HasMoves;
         public string LastMove;
@@ -19,22 +22,15 @@ namespace Speech_Recognition_test
         private Grammar _movesGrammar;
         private Grammar _pokemonGrammar;
         private Grammar _selectionGrammar;
+        private Grammar _battleGrammar;
 
         public static string[] BattleOptions = { "FIGHT", "PACK", "POKéMON", "RUN", "again" };
         public static readonly string[] BattleSpecific = { "enter trainer battle", "enter wild battle", "read moves" };
         public static string[] CurrentPokemon { get; private set; }
         public static string[] CurrentOptions { get; private set; }
 
-        public BattleState CurrentState;
-        public enum BattleState
-        {
-            Battle,
-            Fight,
-            Pack,
-            Pokemon,
-            NotInBattle,
-            SelectOptions
-        }
+        public int CurrentState;
+        public int PreviousState;
 
         public OpponentType Opponent;
         public enum OpponentType
@@ -43,6 +39,37 @@ namespace Speech_Recognition_test
             Trainer
         }
 
+        //Step 1: enter battle
+        public void EnterBattle(OpponentType opponent)
+        {
+            if (InBattle)
+                return;
+            InBattle = true;
+            CurrentState = BattleState.Battle;
+            _form.battleModeLabel.Text = "IN BATTLE";
+            Opponent = opponent;
+
+            var battleGrammar = GetBattleOptionsGrammar();
+            _form.Recognizer.LoadGrammar(battleGrammar);
+            currentGrammar = battleGrammar;
+        }
+
+        //Step 2: select action (fight, pack, etc)
+        public void ChooseAction(string action)
+        {
+            CurrentEventChain.AddLast(new EventLink(() => BattleOption.Trigger(action)));
+            BattleOption.Trigger(action);
+        }
+
+        public void ExitBattle()
+        {
+            if(_battleGrammar != null)
+                _form.Recognizer.UnloadGrammar(_battleGrammar);
+            HasMoves = false;
+            _form.battleModeLabel.Text = "not in battle";
+            CurrentState = BattleState.NotInBattle;
+        }
+        
         public static Grammar CreateGrammar(params string[] phrases)
         {
             var choises = new Choices();
@@ -53,22 +80,28 @@ namespace Speech_Recognition_test
             return g;
         }
 
-        public void SetOptions()
+        public Grammar GetBattleOptionsGrammar()
+        {
+            BattleMenuCursor.Reset();
+            return _battleGrammar ?? (_battleGrammar = CreateGrammar(BattleOptions));
+        }
+
+        public Grammar GetOptionsGrammar()
         {
             CurrentOptions = Ocr.GetOptionsFromRectangle(Ocr.PokemonBattleOptionsLocation, out int index);
             BattleMenuCursor.OptionsCursor = index;
-            if (_selectionGrammar != null)
-                _form.Recognizer.UnloadGrammar(_selectionGrammar);
 
             _selectionGrammar = CreateGrammar(CurrentOptions);
-            _form.Recognizer.LoadGrammar(_selectionGrammar);
+            return _selectionGrammar;
         }
 
-        public void SetMoves(string str)
+        public Grammar GetMovesGrammar()
         {
+            var str = Ocr.ReadFromRectangle(Ocr.ConsoleTextLocation);
+
             // UpdateGUI moves
             var lines = str.Split(NewlineDelimiter, StringSplitOptions.RemoveEmptyEntries)
-                .Where((x, i) => i > 0 && !String.IsNullOrWhiteSpace(x)) //Remove added confidence from OCR and check for whitelines
+                .Where((x, i) => i > 0 && !string.IsNullOrWhiteSpace(x)) //Remove added confidence from OCR and check for whitelines
                 .ToArray();
 
             if (lines.Length > 4)
@@ -79,136 +112,20 @@ namespace Speech_Recognition_test
             _form.listBox1.Items.Clear();
             foreach (string move in MoveList)
                 _form.listBox1.Items.Add(move);
-
-            // Create new speech grammar
-            if (_movesGrammar != null)
-                _form.Recognizer.UnloadGrammar(_movesGrammar);
-
+            
             _movesGrammar = CreateGrammar(MoveList);
-            _form.Recognizer.LoadGrammar(_movesGrammar);
+            return _movesGrammar;
         }
 
-        public void SetPokemon()
+        public Grammar GetPokemonGrammar()
         {
             CurrentPokemon = Pokemon.ReadPokemon().ToArray();
-
-            if (_pokemonGrammar != null)
-                _form.Recognizer.UnloadGrammar(_pokemonGrammar);
-
-            _pokemonGrammar = CreateGrammar(CurrentPokemon);
-            _form.Recognizer.LoadGrammar(_pokemonGrammar);
 
             _form.Pokemons.Items.Clear();
             foreach (var pok in CurrentPokemon)
                 _form.Pokemons.Items.Add(pok);
-        }
-
-        //Step 1: enter battle
-        public void EnterBattle(OpponentType opponent)
-        {
-            BattleMenuCursor.Reset();
-            InBattle = true;
-            CurrentState = BattleState.Battle;
-            _form.battleModeLabel.Text = "IN BATTLE";
-            Opponent = opponent;
-        }
-
-        //Step 2: select action (fight, pack, etc)
-        public void ChooseAction(string action)
-        {
-            switch (action)
-            {
-                case "FIGHT":
-                    BattleMenuCursor.SelectAction(BattleMenuCursor.Fight);
-                    if (!HasMoves)
-                    {
-                        var moves = Ocr.ReadFromRectangle(Ocr.ConsoleTextLocation);
-                        SetMoves(moves);
-                        HasMoves = true;
-                    }
-                    CurrentState = BattleState.Fight;
-                    break;
-                case "POKéMON":
-                    BattleMenuCursor.SelectAction(BattleMenuCursor.Pokemon);
-                    Thread.Sleep(1000); //Let the screen load
-                    SetPokemon();
-                    CurrentState = BattleState.Pokemon;
-                    break;
-                case "PACK":
-                    BattleMenuCursor.SelectAction(BattleMenuCursor.Pack);
-                    CurrentState = BattleState.Pack;
-                    break;
-                case "RUN":
-                    BattleMenuCursor.SelectAction(BattleMenuCursor.Run);
-                    Run();
-                    break;
-                default:
-                    _form.statusLabel.Text = "Could not interpret action";
-                    break;
-            }
-        }
-
-        private bool ChooseIndexableItem(ref int cursor, string item, string[] itemCollection, Func<bool> checker = null)
-        {
-            if (checker != null && !checker())
-            {
-                _form.statusLabel.Text = "Didnt pass check";
-                return false;
-            }
-            _form.statusLabel.Text = item;
-            var itemIndex = Array.IndexOf(itemCollection, item);
-            if (itemIndex < 0)
-            {
-                _form.statusLabel.Text = "Could not find item index";
-                KeySender.Back();
-                return false;
-            }
-
-            BattleMenuCursor.SelectIndex(ref cursor, itemIndex, itemCollection.Length);
-            return true;
-        }
-
-        public void ChooseMove(string move)
-        {
-            var success = ChooseIndexableItem(ref BattleMenuCursor.FightCursor, move, MoveList, () => HasMoves);
-            if (!success)
-            {
-                CurrentState = BattleState.Battle;
-                return;
-            }
-            LastMove = move;
-            CurrentState = BattleState.Battle;
-        }
-
-        public void ChoosePokemon(string pokemon)
-        {
-            var success = ChooseIndexableItem(ref BattleMenuCursor.PokemonCursor, pokemon, CurrentPokemon);
-            if (!success)
-            {
-                CurrentState = BattleState.Battle;
-                return;
-            }
-            Thread.Sleep(500); //Let the screen load
-            SetOptions();
-            CurrentState = BattleState.SelectOptions;
-        }
-
-        public void ChooseOption(string option)
-        {
-            var success = ChooseIndexableItem(ref BattleMenuCursor.OptionsCursor, option, CurrentOptions);
-            CurrentState = success ? BattleState.Battle : BattleState.Pokemon;
-        }
-
-        public void Run()
-        {
-            ExitBattle();
-        }
-
-        public void ExitBattle()
-        {
-            HasMoves = false;
-            _form.battleModeLabel.Text = "not in battle";
-            CurrentState = BattleState.NotInBattle;
+            _pokemonGrammar = CreateGrammar(CurrentPokemon);
+            return _pokemonGrammar;
         }
     }
 }
