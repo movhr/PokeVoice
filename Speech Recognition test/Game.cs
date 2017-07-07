@@ -109,6 +109,10 @@ namespace Speech_Recognition_test
                     }
                     CurrentState = BattleState.Fight;
                     break;
+                //case "POKEMON":
+                //    BattleMenuCursor.SelectAction(BattleMenuCursor.Pokemon);
+                //    CurrentState = BattleState.Pokemon;
+                //    break;
                 case "RUN":
                     BattleMenuCursor.SelectAction(BattleMenuCursor.Run);
                     Run();

@@ -20,13 +20,13 @@ namespace Speech_Recognition_test
             var dX = dest.X - BattleCursor.X;
             var dY = dest.Y - BattleCursor.Y;
             if (dX < 0)
-                KeySender.Up();
-            else if (dX > 0)
-                KeySender.Down();
-            if (dY > 0)
-                KeySender.Right();
-            else if (dY < 0)
                 KeySender.Left();
+            else if (dX > 0)
+                KeySender.Right();
+            if (dY > 0)
+                KeySender.Down();
+            else if (dY < 0)
+                KeySender.Up();
             KeySender.Confirm();
             BattleCursor = dest;
         }
