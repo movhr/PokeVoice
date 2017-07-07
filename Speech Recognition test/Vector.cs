@@ -25,5 +25,10 @@ namespace Speech_Recognition_test
             if (xComparison != 0) return xComparison;
             return Y.CompareTo(other.Y);
         }
+
+        public void Reset()
+        {
+            X = Y = 0;
+        }
     }
 }

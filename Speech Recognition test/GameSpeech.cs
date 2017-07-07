@@ -34,7 +34,7 @@ namespace Speech_Recognition_test
             {
                 if (text == "stop")
                 {
-                    _movingDirection = new Vector();
+                    _movingDirection.Reset();
                 }
                 else
                 {
@@ -47,6 +47,7 @@ namespace Speech_Recognition_test
                     else if (text.Contains("down"))
                         _movingDirection = new Vector(0, 1);
                 }
+                return;
             }
 
 
@@ -77,8 +78,13 @@ namespace Speech_Recognition_test
                 case BattleState.Pack:
                     break;
                 case BattleState.Pokemon:
+                    ChoosePokemon(text);
                     break;
                 case BattleState.NotInBattle:
+                    break;
+                case BattleState.SelectOptions:
+                    ChooseOption(text);
+                    BattleMenuCursor.BattleCursor.Reset();
                     break;
                 default:
                     break;

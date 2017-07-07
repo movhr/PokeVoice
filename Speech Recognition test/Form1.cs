@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Speech.Recognition;
 using System.Windows.Forms;
+using Speech_Recognition_test.Properties;
 
 namespace Speech_Recognition_test
 {
@@ -29,15 +30,15 @@ namespace Speech_Recognition_test
         public Form1()
         {
             InitializeComponent();
+            LOG_FILE_PATH = Settings.Default.LogFilePath;
         }
 
-        static string LAST_RESULT = "";
-        public const string LOG_FILE_PATH = @"C:/Users/katel/Desktop/Crystal_ocr_log.txt";
-        //public const string LOG_FILE_PATH = @"C:/Users/Donald/Source/Repos/PokeVoice/crystal_ocr_log.txt"; 
+        public static string LOG_FILE_PATH { get; private set; }
         public static StreamWriter LogStream;
         public static Process[] VBA;
         public SpeechRecognizer Recognizer;
         private Game _game;
+        private static string LAST_RESULT = "";
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -48,7 +49,7 @@ namespace Speech_Recognition_test
             if (VBA.Length == 0)
                 throw new NullReferenceException("VBA could not be located");
             
-
+            // Add speech recognition phrases
             Choices x = new Choices();
             x.Add(Confirmation);
             x.Add(Cancelation);
@@ -73,6 +74,7 @@ namespace Speech_Recognition_test
 
             // Register a handler for the SpeechRecognized event.
             Recognizer.SpeechRecognized += (Sre_SpeechRecognized);
+
 
             FileStream logFile = File.Open(LOG_FILE_PATH, FileMode.Append);
             LogStream = new StreamWriter(logFile);
@@ -111,7 +113,7 @@ namespace Speech_Recognition_test
             if (LAST_RESULT == "picture recognition")
             {
                 var sw = Stopwatch.StartNew();
-                var ssHash = PictureRecognition.GetHash(Speech_Recognition_test.Ocr.ShootScreen());
+                var ssHash = PictureRecognition.GetHash(PictureRecognition.ShootScreen(Speech_Recognition_test.Ocr.WindowLocation));
                 PrependRichTextboxText(ssHash.Length);
                 for (int i = 0; i < ssHash.Length; i++)
                 {
