@@ -66,9 +66,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BattleMenuCursor.cs" />
-    <Compile Include="BattleOption.cs" />
-    <Compile Include="BattleState.cs" />
+    <Compile Include="Game\BattleMenuCursor.cs" />
+    <Compile Include="Game\BattleOption.cs" />
+    <Compile Include="Game\BattleState.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="EventChain.cs" />
     <Compile Include="Form1.cs">
@@ -77,15 +77,19 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game.cs" />
-    <Compile Include="GameBattle.cs" />
-    <Compile Include="GameOcr.cs" />
-    <Compile Include="GameSpeech.cs" />
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\GameBattle.cs" />
+    <Compile Include="Game\GameOcr.cs" />
+    <Compile Include="Game\GameSpeech.cs" />
+    <Compile Include="Game\Pack.cs" />
+    <Compile Include="Game\Player.cs" />
+    <Compile Include="Game\Pokemon.cs" />
     <Compile Include="KeySender.cs" />
     <Compile Include="MyRectangle.cs" />
     <Compile Include="Ocr.cs" />
+    <Compile Include="Picture.cs" />
     <Compile Include="PictureRecognition.cs" />
-    <Compile Include="GamePokemon.cs" />
+    <Compile Include="Game\GamePokemon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Speech.cs" />
@@ -277,7 +281,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="continueConsole.png" />
+    <Content Include="img\continueConsole.png" />
+    <Content Include="img\emptyTextbox.png" />
     <Content Include="x64\liblept172.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -304,4 +309,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

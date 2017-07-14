@@ -116,7 +116,7 @@ namespace Speech_Recognition_test
             if (LAST_RESULT == "picture recognition")
             {
                 var sw = Stopwatch.StartNew();
-                var ssHash = PictureRecognition.GetHash(PictureRecognition.ShootScreen(Speech_Recognition_test.Ocr.WindowLocation));
+                var ssHash = PictureRecognition.GetHash(Speech_Recognition_test.Ocr.ShootScreen(Speech_Recognition_test.Ocr.WindowLocation));
                 PrependRichTextboxText(ssHash.Length);
                 for (int i = 0; i < ssHash.Length; i++)
                 {
@@ -126,7 +126,7 @@ namespace Speech_Recognition_test
                 }
                 sw.Stop();
                 PrependRichTextboxText(sw.ElapsedMilliseconds + "ms \n");
-                PrependRichTextboxText(PictureRecognition.GetHashProbability(ssHash, Game.EmptyTextBox).ToString("N4") + '\n');
+                PrependRichTextboxText(PictureRecognition.GetHashProbability(ssHash, Picture.EmptyTextBox).ToString("N4") + '\n');
             }
             
             if (Navigation.Contains(LAST_RESULT))

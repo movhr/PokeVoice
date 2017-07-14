@@ -1,16 +1,30 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Speech_Recognition_test
 {
-    public partial class Game
+    public class Picture
     {
-        public static readonly bool[] EmptyTextBox = 
+        public static readonly Picture ContinueConsole = new Picture();
+        public static readonly Picture EmptyTextbox;
+
+        public bool[] Hash { get; set; }
+        public Bitmap Image { get; set; }
+
+        public Picture(string filePath, Size size)
+        {
+            this.Image = ResizeImage(new Bitmap(filePath), size.Width, size.Height);
+            this.Hash = PictureRecognition.GetHash(this.Image, size);
+        }
+
+        
+        public static readonly bool[] EmptyTextBox =
         {
             false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
             false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false,
@@ -31,42 +45,36 @@ namespace Speech_Recognition_test
             true, true, true, true, true, true, true, true, true, true, true, true, true, false
         };
 
-        public void RelayOcr(string text)
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap ResizeImage(Image image, int width, int height)
         {
-            text = text.Replace('\n', ' ');
-            if (text.Contains("Wild") && text.Contains("appeared"))
-                EnterBattle(OpponentType.Wild);
-            else if (text.Contains("wants to battle"))
-                EnterBattle(OpponentType.Trainer);
-            else if (Opponent == OpponentType.Wild && (text.Contains("fainted") || text.Contains("Got away safely")))
-                ExitBattle();
-            else if (text.Contains("was defeated") && Opponent == OpponentType.Trainer)
-                ExitBattle();
-        }
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
 
-        public void TextboxContinueTalking()
-        {
-            using (var bmp = PictureRecognition.ShootScreen(Ocr.ConsoleLocation))
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
             {
-                var ph = PictureRecognition.GetHashProbability(bmp, EmptyTextBox);
-                if (ph > 75)
-                {
-                    _movingDirection = new Vector();
-                    using (var ss = PictureRecognition.ShootScreen(
-                        MyRectangle.RelativeToSize(Ocr.WindowLocation, 136, 144, 7, 7)))
-                    {
-                        //_form.continuePicture.Image = ss;
-                        ph = PictureRecognition.GetHashProbability(ss, ContinueConsole);
-                        //_form.continueProbability.Text = ph.ToString("N2");
-                        if (ph > 70)
-                        {
-                            Thread.Sleep(500);
-                            KeySender.Confirm();
-                        };
-                    }
-                }
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
             }
+
+            return destImage;
         }
     }
 }

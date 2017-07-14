@@ -50,7 +50,7 @@ namespace Speech_Recognition_test
 
             PokemonBattleOptionsLocation = MyRectangle.RelativeToSize(WindowLocation, 95, 94, 59, 43);
 
-            ShootingRegion = ConsoleTextLocation;
+            ShootingRegion = WindowLocation;
             OldWindowRect = windowWindowRect;
         }
 
@@ -116,7 +116,7 @@ namespace Speech_Recognition_test
                 _engine.SetVariable("tessedit_char_whitelist",
                     @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789é$>…'!?:.,/");
             }
-            var bm = PictureRecognition.ShootScreen(rect);
+            var bm = ShootScreen(rect);
             if (saveScreenshot)
                 bm.Save($"ocr_{DateTime.Now.ToMilliSecondString()}.png", ImageFormat.Png);
             using (var result = _engine.Process(bm))
@@ -140,6 +140,42 @@ namespace Speech_Recognition_test
                 textLines[currentIndex] = textLines[currentIndex].Substring(startIndex);
             }
             return textLines;
+        }
+
+        //public static string[] FindTextboxOnScreen()
+        //{
+        //    var ss = ShootScreen(WindowLocation);
+        //
+        //}
+
+        public static Bitmap ShootScreen(MyRectangle area)
+        {
+            //Create a new bitmap.
+            var rect = new WindowRect();
+            if (Form1.VBA.Length==0)
+                throw new NullReferenceException("Could not find window");
+
+            if (!Ocr.GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
+                throw new NullReferenceException("Could not find window location");
+
+            if (!Ocr.OldWindowRect.Equals(rect))
+                Ocr.SetWindowLocations(rect);
+
+            var bmpScreenshot = new Bitmap(area.Width, area.Height, PixelFormat.Format24bppRgb);
+
+            // Create a graphics object from the bitmap.
+            var gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+
+            // Take the screenshot from the upper left corner to the right bottom corner.
+            gfxScreenshot.CopyFromScreen(
+                area.Left,
+                area.Top,
+                0,
+                0,
+                new Size(area.Width, area.Height),
+                CopyPixelOperation.SourceCopy);
+
+            return bmpScreenshot;
         }
     }
 }

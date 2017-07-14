@@ -18,6 +18,5 @@ namespace Speech_Recognition_test
             public const int SelectOptions = 5;
             public const int None = 6;
         }
-        
     }
 }

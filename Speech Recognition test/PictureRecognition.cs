@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -69,35 +70,6 @@ namespace Speech_Recognition_test
         {
             return GetHashProbability(GetHash(bmp1, 7), GetHash(bmp2, 7));
         }
-
-        public static Bitmap ShootScreen(MyRectangle area)
-        {
-            //Create a new bitmap.
-            var rect = new WindowRect();
-            if (Form1.VBA.Length==0)
-                throw new NullReferenceException("Could not find window");
-
-            if (!Ocr.GetWindowRect(Form1.VBA[0].MainWindowHandle, ref rect))
-                throw new NullReferenceException("Could not find window location");
-
-            if (!Ocr.OldWindowRect.Equals(rect))
-                Ocr.SetWindowLocations(rect);
-
-            var bmpScreenshot = new Bitmap(area.Width, area.Height, PixelFormat.Format24bppRgb);
-
-            // Create a graphics object from the bitmap.
-            var gfxScreenshot = Graphics.FromImage(bmpScreenshot);
-
-            // Take the screenshot from the upper left corner to the right bottom corner.
-            gfxScreenshot.CopyFromScreen(
-                area.Left,
-                area.Top,
-                0,
-                0,
-                new Size(area.Width, area.Height),
-                CopyPixelOperation.SourceCopy);
-
-            return bmpScreenshot;
-        }
+        
     }
 }
